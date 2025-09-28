@@ -1,31 +1,31 @@
 import os
 import requests
-
-api_key = '7fec70a40ce6aaf16cd4caa5'
-token = os.getenv(api_key)
-base_currency = input('Какую валюту вы хотит выбрать? ').upper()
+from dotenv import load_dotenv
 
 
 def get_exchange_rates(token, base_currency):
-    exchange_rates_url = f'https://v6.exchangerate-api.com/v6/{api_key}/latest/{base_currency}'
+    exchange_rates_url = f'https://v6.exchangerate-api.com/v6/{token}/latest/{base_currency}'
     response = requests.get(exchange_rates_url)
     response.raise_for_status()
     exchange_rates = response.json()['conversion_rates']
     return exchange_rates
 
 
-def get_target_exchange_rates(base_currency):
-    target_currency = input('Впишите целевую валюту: ').upper()
-    exchange_rates_url = f'https://v6.exchangerate-api.com/v6/{api_key}/latest/{base_currency}'
-    response = requests.get(exchange_rates_url)
-    response.raise_for_status()
-    target_exchange_rates = response.json()['conversion_rates'][target_currency]
-    return target_exchange_rates
+def convert_amount(amount_money, exchange_rates, target_exchange_rates):
+    target_rates = exchange_rates[target_exchange_rates]
+    print(target_rates)
+    convertible_currency = amount_money * target_rates
+    return convertible_currency
 
 
 def main():
-    print(get_exchange_rates(token, base_currency))
-    print(get_target_exchange_rates(base_currency))
+    load_dotenv()
+    token = os.getenv('API_KEY')
+    base_currency = input('Введите код базовой валюты: ').upper()
+    target_currency = input('Введите код целевой валюты: ').upper()
+    amount_money = float(input('Введите сумму: '))
+    exchange_rates = get_exchange_rates(token, base_currency)
+    print(convert_amount(amount_money, exchange_rates, target_currency))
 
 
 if __name__ == '__main__':

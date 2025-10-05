@@ -22,17 +22,13 @@ def convert_amount(amount_money, exchange_rates, target_exchange_rates):
 def main():
     load_dotenv()
     token = os.getenv('API_KEY')
-    # base_currency = input('Введите код базовой валюты: ').upper()
-    # target_currency = input('Введите код целевой валюты: ').upper()
-    # amount_money = float(input('Введите сумму: '))
-    parser = argparse.ArgumentParser(description='Ввести валюты')
+    parser = argparse.ArgumentParser(description='Эта програма конвертирует базовые валюты в целевые')
     parser.add_argument('-b', '--base', help='Базовая валюта', default='RUB')
     parser.add_argument('-t', '--target', help='Целевая валюта', default='USD')
-    parser.add_argument('-a', '--amount', type=int, help='Сумма', default='1000')
+    parser.add_argument('-a', '--amount', type=float, help='Сумма', default='1000')
     args = parser.parse_args()
-    print(args)
-    # exchange_rates = get_exchange_rates(token, base_currency)
-    # print(convert_amount(amount_money, exchange_rates, target_currency))
+    exchange_rates = get_exchange_rates(token, args.base)
+    print(convert_amount(args.amount, exchange_rates, args.target))
 
 
 if __name__ == '__main__':
